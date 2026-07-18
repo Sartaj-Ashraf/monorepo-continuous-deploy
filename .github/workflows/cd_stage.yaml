@@ -1,0 +1,35 @@
+name: Deploy to staging
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to staging
+        run: |
+          echo "Deploying to staging..."
+
+          echo "${{ secrets.SSH_PRIVATE_KEY_STAGING }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
+
+          ssh -o StrictHostKeyChecking=no \
+            -i ~/ssh_key \
+            ${{ secrets.STAGING_HOST_USER }}@${{ secrets.STAGING_HOST_IP }} << 'EOF'
+
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+          
+          cd /home/ubuntu/monorepo-continuous-deploy
+
+          git pull
+          pnpm install
+          pnpm build
+
+          pm2 restart all
+
+          EOF
