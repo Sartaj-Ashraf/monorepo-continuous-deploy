@@ -8,19 +8,16 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy
+      - name: Deploy to staging
+        run: echo "Deploying to staging"
+      - name: Run SSH command
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY_STAGING }}" > ~/ssh_key
-          chmod 600 ~/ssh_key
-
-          ssh -o StrictHostKeyChecking=no \
-            -i ~/ssh_key \
-            ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST_IP }} \
-            "cd /home/ubuntu/monorepo-continuous-deploy && \
-            git pull && \
-            pnpm install && \
-            pnpm build && \
-            pm2 restart all"
+          ssh -i ~/ssh_key ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST_IP }} 
+          cd /home/ubuntu/monorepo-continuous-deploy && git pull
+          pnpm install
+          pnpm build 
+          pm2 restart all
           
         
 
