@@ -19,7 +19,7 @@ jobs:
 
           ssh -o StrictHostKeyChecking=no \
             -i ~/ssh_key \
-            ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST_IP }} << 'EOF'
+            ${{ secrets.STAGING_HOST_USER }}@${{ secrets.STAGING_HOST_IP }} << 'EOF'
 
           cd /home/ubuntu/monorepo-continuous-deploy
 
