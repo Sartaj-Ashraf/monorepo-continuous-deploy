@@ -14,3 +14,4 @@ server.on("connection", async (socket) => {
     })
     socket.send("Hi there you are connected to the server");
 })
+console.log("WebSocket Server started on port 3001");
